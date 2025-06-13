@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Anniversary!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        /* General Setup */
+        :root {
+            --background-color: #6d1a36; /* A deep, rich burgundy */
+            --text-color: #fff5e1; /* A warm, creamy white */
+            --accent-color: #ffb6c1; /* Light pink for accents */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevents scrollbars from appearing */
+            font-family: sans-serif;
+        }
+
+        /* Page Container - This holds both pages and slides */
+        #page-container {
+            display: flex;
+            width: 200vw; /* Container is twice the viewport width */
+            height: 100vh;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); /* Smooth sliding animation */
+        }
+
+        /* Individual Page Styling */
+        .page {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--background-color);
+            padding: 20px;
+            box-sizing: border-box;
+            gap: 30px; /* Space between text, cake, and button */
+        }
+
+        /* Animated Heading */
+        .animated-heading {
+            font-family: 'Great Vibes', cursive;
+            color: var(--text-color);
+            font-size: clamp(3rem, 10vw, 5rem); /* Responsive font size */
+            text-align: center;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        /* Each letter is a span for individual animation */
+        .animated-heading span {
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInLetter 0.5s forwards;
+        }
+
+        @keyframes fadeInLetter {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Anniversary Cake SVG */
+        .cake-svg {
+            width: 200px;
+            height: auto;
+            filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.3));
+        }
+
+        /* Navigation Button */
+        .nav-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .nav-button svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-color);
+        }
+        
+        /* Placeholder on the second page */
+        #page2 h2 {
+            font-family: 'Great Vibes', cursive;
+            color: var(--text-color);
+            font-size: clamp(2rem, 8vw, 4rem);
+            text-align: center;
+            opacity: 0.7;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- This container holds both pages and will be translated -->
+    <div id="page-container">
+
+        <!-- Page 1: The Welcome Screen -->
+        <section id="page1" class="page">
+            <h1 class="animated-heading">Happy Anniversary, Love of my Life</h1>
+            
+            <!-- SVG Anniversary Cake -->
+            <svg viewBox="0 0 100 100" class="cake-svg" aria-label="Anniversary Cake">
+                <!-- Cake Stand -->
+                <path d="M 15 90 L 85 90 L 80 95 L 20 95 Z" fill="#E0E0E0"/>
+                <path d="M 48 85 L 52 85 L 52 90 L 48 90 Z" fill="#E0E0E0"/>
+                
+                <!-- Bottom Tier -->
+                <path d="M 10 70 C 10 80, 90 80, 90 70 L 90 85 L 10 85 Z" fill="#FFB6C1"/>
+                <ellipse cx="50" cy="70" rx="40" ry="8" fill="#FFDDE1"/>
+                
+                <!-- Middle Tier -->
+                <path d="M 20 50 C 20 60, 80 60, 80 50 L 80 65 L 20 65 Z" fill="#FFB6C1"/>
+                <ellipse cx="50" cy="50" rx="30" ry="7" fill="#FFDDE1"/>
+                
+                <!-- Top Tier -->
+                <path d="M 30 30 C 30 40, 70 40, 70 30 L 70 45 L 30 45 Z" fill="#FFB6C1"/>
+                <ellipse cx="50" cy="30" rx="20" ry="6" fill="#FFDDE1"/>
+                
+                <!-- Candles -->
+                <rect x="48" y="15" width="4" height="15" fill="#FFFFFF"/>
+                <path d="M 50 10 A 3 3 0 0 1 50 16" fill="orange"/>
+            </svg>
+
+            <button id="next-page-btn" class="nav-button" aria-label="Go to next page">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+            </button>
+        </section>
+
+        <!-- Page 2: The Next Step -->
+        <section id="page2" class="page">
+            <h2>The next chapter begins here...</h2>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Animate the heading text
+            const heading = document.querySelector('.animated-heading');
+            const text = heading.textContent;
+            heading.textContent = ''; // Clear original text
+
+            // Wrap each letter in a span and apply a staggered animation delay
+            text.split('').forEach((letter, index) => {
+                const span = document.createElement('span');
+                span.textContent = letter === ' ' ? '\u00A0' : letter; // Handle spaces
+                span.style.animationDelay = `${index * 0.07}s`; // Stagger the animation
+                heading.appendChild(span);
+            });
+
+            // 2. Handle page sliding
+            const nextPageBtn = document.getElementById('next-page-btn');
+            const pageContainer = document.getElementById('page-container');
+
+            nextPageBtn.addEventListener('click', () => {
+                // Slide the container to the left to reveal the second page
+                pageContainer.style.transform = 'translateX(-100vw)';
+            });
+        });
+    </script>
+
+</body>
+</html>
