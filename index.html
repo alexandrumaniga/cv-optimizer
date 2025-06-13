@@ -43,17 +43,21 @@
             background-color: var(--background-color);
             padding: 20px;
             box-sizing: border-box;
-            gap: 30px; /* Space between text, cake, and button */
+            /* MOBILE FIX: Use clamp() for the gap to make it smaller on short screens */
+            gap: clamp(20px, 5vh, 30px);
         }
 
         /* Animated Heading */
         .animated-heading {
             font-family: 'Great Vibes', cursive;
             color: var(--text-color);
-            font-size: clamp(3rem, 10vw, 5rem); /* Responsive font size */
+            /* MOBILE FIX: Adjusted clamp() values for better responsive font scaling. */
+            /* Min size is smaller, preferred size scales less aggressively with viewport width. */
+            font-size: clamp(2.2rem, 8vw, 4.5rem);
             text-align: center;
             font-weight: normal;
             margin: 0;
+            line-height: 1.2; /* Added line-height to prevent text from looking cramped if it wraps */
         }
 
         /* Each letter is a span for individual animation */
@@ -72,7 +76,8 @@
 
         /* Anniversary Cake SVG */
         .cake-svg {
-            width: 200px;
+            /* MOBILE FIX: Use clamp() to make the cake responsive */
+            width: clamp(150px, 45vw, 200px);
             height: auto;
             filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.3));
         }
@@ -120,7 +125,7 @@
 
         <!-- Page 1: The Welcome Screen -->
         <section id="page1" class="page">
-            <h1 class="animated-heading">Happy Anniversary, Love of my Life</h1>
+            <h1 class="animated-heading">Happy 6 Months, Love of my Life</h1>
             
             <!-- SVG Anniversary Cake -->
             <svg viewBox="0 0 100 100" class="cake-svg" aria-label="Anniversary Cake">
@@ -161,25 +166,30 @@
         document.addEventListener('DOMContentLoaded', () => {
             // 1. Animate the heading text
             const heading = document.querySelector('.animated-heading');
-            const text = heading.textContent;
-            heading.textContent = ''; // Clear original text
+            // Check if heading exists to prevent errors
+            if (heading) {
+                const text = heading.textContent;
+                heading.textContent = ''; // Clear original text
 
-            // Wrap each letter in a span and apply a staggered animation delay
-            text.split('').forEach((letter, index) => {
-                const span = document.createElement('span');
-                span.textContent = letter === ' ' ? '\u00A0' : letter; // Handle spaces
-                span.style.animationDelay = `${index * 0.07}s`; // Stagger the animation
-                heading.appendChild(span);
-            });
+                // Wrap each letter in a span and apply a staggered animation delay
+                text.split('').forEach((letter, index) => {
+                    const span = document.createElement('span');
+                    span.textContent = letter === ' ' ? '\u00A0' : letter; // Handle spaces
+                    span.style.animationDelay = `${index * 0.07}s`; // Stagger the animation
+                    heading.appendChild(span);
+                });
+            }
 
             // 2. Handle page sliding
             const nextPageBtn = document.getElementById('next-page-btn');
             const pageContainer = document.getElementById('page-container');
 
-            nextPageBtn.addEventListener('click', () => {
-                // Slide the container to the left to reveal the second page
-                pageContainer.style.transform = 'translateX(-100vw)';
-            });
+            if(nextPageBtn && pageContainer) {
+                nextPageBtn.addEventListener('click', () => {
+                    // Slide the container to the left to reveal the second page
+                    pageContainer.style.transform = 'translateX(-100vw)';
+                });
+            }
         });
     </script>
 
