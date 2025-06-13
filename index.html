@@ -6,30 +6,36 @@
     <title>Happy Anniversary!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
         /* General Setup */
         :root {
             --background-color: #6d1a36; /* A deep, rich burgundy */
             --text-color: #fff5e1; /* A warm, creamy white */
             --accent-color: #ffb6c1; /* Light pink for accents */
+            --border-color: rgba(255, 245, 225, 0.3); /* Greyish-white for borders */
         }
 
-        body, html {
+        html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Prevents scrollbars from appearing */
-            font-family: sans-serif;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            overflow-x: hidden;
         }
 
-        /* Page Container - This holds both pages and slides */
+
+        /* Page Container */
         #page-container {
             display: flex;
-            width: 200vw; /* Container is twice the viewport width */
+            width: 200vw;
             height: 100vh;
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); /* Smooth sliding animation */
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         /* Individual Page Styling */
@@ -43,26 +49,28 @@
             background-color: var(--background-color);
             padding: 20px;
             box-sizing: border-box;
-            /* MOBILE FIX: Use clamp() for the gap to make it smaller on short screens */
-            gap: clamp(20px, 5vh, 30px);
+            position: relative;
+        }
+        
+        /* Page 1 Specifics */
+        #page1 {
+             gap: clamp(20px, 5vh, 30px);
         }
 
-        /* Animated Heading */
-        .animated-heading {
+        /* Animated Heading on Page 1 */
+        .animated-heading-horizontal {
             font-family: 'Great Vibes', cursive;
             color: var(--text-color);
-            /* MOBILE FIX: Adjusted clamp() values for better responsive font scaling. */
-            /* Min size is smaller, preferred size scales less aggressively with viewport width. */
             font-size: clamp(2.2rem, 8vw, 4.5rem);
             text-align: center;
             font-weight: normal;
             margin: 0;
-            line-height: 1.2; /* Added line-height to prevent text from looking cramped if it wraps */
+            line-height: 1.2;
         }
 
-        /* Each letter is a span for individual animation */
-        .animated-heading span {
+        .animated-heading-horizontal span {
             opacity: 0;
+            display: inline-block;
             transform: translateY(-20px);
             animation: fadeInLetter 0.5s forwards;
         }
@@ -76,7 +84,6 @@
 
         /* Anniversary Cake SVG */
         .cake-svg {
-            /* MOBILE FIX: Use clamp() to make the cake responsive */
             width: clamp(150px, 45vw, 200px);
             height: auto;
             filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.3));
@@ -107,45 +114,114 @@
             fill: var(--text-color);
         }
         
-        /* Placeholder on the second page */
-        #page2 h2 {
+        /* ---- Page 2: Memory Gallery Styling ---- */
+        #page2 .gallery-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            gap: 20px;
+        }
+
+        .photo-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .memory-box {
+            width: clamp(100px, 25vw, 180px);
+            height: clamp(100px, 25vw, 180px);
+            border: 3px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        .memory-box:hover {
+            transform: scale(1.05);
+        }
+
+        .memory-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* FIX: New styling for vertically stacked heading */
+        .animated-heading-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             font-family: 'Great Vibes', cursive;
             color: var(--text-color);
-            font-size: clamp(2rem, 8vw, 4rem);
+            font-size: clamp(2.5rem, 7vw, 4rem);
             text-align: center;
-            opacity: 0.7;
+            padding: 0 20px;
+            line-height: 1.1;
         }
+        
+        /* FIX: Animation is now applied to each line (span) */
+        .animated-heading-vertical span {
+            opacity: 0;
+            display: block;
+            transform: translateY(-30px);
+            animation: dropInLine 0.8s forwards cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        /* Stagger the animation for each line */
+        .animated-heading-vertical span:nth-child(2) {
+            animation-delay: 0.2s;
+            font-size: 0.7em; /* Make "of" smaller */
+        }
+        .animated-heading-vertical span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dropInLine {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Mobile responsive layout for the gallery */
+        @media (max-width: 768px) {
+            #page2 {
+                overflow-y: auto;
+            }
+            #page2 .gallery-container {
+                flex-direction: column;
+                gap: 20px;
+                padding-top: 40px; 
+            }
+            /* Make vertical heading the first item in the flex column on mobile */
+            .animated-heading-vertical {
+                 order: -1;
+            }
+        }
+
 
     </style>
 </head>
 <body>
 
-    <!-- This container holds both pages and will be translated -->
     <div id="page-container">
 
         <!-- Page 1: The Welcome Screen -->
         <section id="page1" class="page">
-            <h1 class="animated-heading">Happy 6 Months, Love of my Life</h1>
+            <h1 class="animated-heading-horizontal">Happy 6 Months, Love of my Life</h1>
             
-            <!-- SVG Anniversary Cake -->
             <svg viewBox="0 0 100 100" class="cake-svg" aria-label="Anniversary Cake">
-                <!-- Cake Stand -->
                 <path d="M 15 90 L 85 90 L 80 95 L 20 95 Z" fill="#E0E0E0"/>
                 <path d="M 48 85 L 52 85 L 52 90 L 48 90 Z" fill="#E0E0E0"/>
-                
-                <!-- Bottom Tier -->
                 <path d="M 10 70 C 10 80, 90 80, 90 70 L 90 85 L 10 85 Z" fill="#FFB6C1"/>
                 <ellipse cx="50" cy="70" rx="40" ry="8" fill="#FFDDE1"/>
-                
-                <!-- Middle Tier -->
                 <path d="M 20 50 C 20 60, 80 60, 80 50 L 80 65 L 20 65 Z" fill="#FFB6C1"/>
                 <ellipse cx="50" cy="50" rx="30" ry="7" fill="#FFDDE1"/>
-                
-                <!-- Top Tier -->
                 <path d="M 30 30 C 30 40, 70 40, 70 30 L 70 45 L 30 45 Z" fill="#FFB6C1"/>
                 <ellipse cx="50" cy="30" rx="20" ry="6" fill="#FFDDE1"/>
-                
-                <!-- Candles -->
                 <rect x="48" y="15" width="4" height="15" fill="#FFFFFF"/>
                 <path d="M 50 10 A 3 3 0 0 1 50 16" fill="orange"/>
             </svg>
@@ -155,38 +231,63 @@
             </button>
         </section>
 
-        <!-- Page 2: The Next Step -->
+        <!-- Page 2: The Memory Gallery -->
         <section id="page2" class="page">
-            <h2>The next chapter begins here...</h2>
+            <div class="gallery-container">
+                <div class="photo-column">
+                    <div class="memory-box"><img src="https://placehold.co/300x300/e8a0bf/ffffff?text=Our+First+Date" alt="Memory 1"></div>
+                    <div class="memory-box"><img src="https://placehold.co/300x300/a0e8bf/ffffff?text=That+Funny+Moment" alt="Memory 2"></div>
+                    <div class="memory-box"><img src="https://placehold.co/300x300/e8bfb0/ffffff?text=Favorite+Trip" alt="Memory 3"></div>
+                </div>
+                
+                <!-- FIX: HTML structure for new heading -->
+                <div class="animated-heading-vertical">
+                    <span>6 months</span>
+                    <span>of</span>
+                    <span>memories</span>
+                </div>
+
+                <div class="photo-column">
+                     <div class="memory-box"><img src="https://placehold.co/300x300/bfa0e8/ffffff?text=Park+Walks" alt="Memory 4"></div>
+                    <div class="memory-box"><img src="https://placehold.co/300x300/e8e0a0/ffffff?text=Movie+Night" alt="Memory 5"></div>
+                    <div class="memory-box"><img src="https://placehold.co/300x300/a0c8e8/ffffff?text=Today+%E2%99%A5" alt="Memory 6"></div>
+                </div>
+            </div>
         </section>
 
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Animate the heading text
-            const heading = document.querySelector('.animated-heading');
-            // Check if heading exists to prevent errors
-            if (heading) {
-                const text = heading.textContent;
-                heading.textContent = ''; // Clear original text
+            
+            function animateHorizontalHeading(selector) {
+                const heading = document.querySelector(selector);
+                if (!heading) return;
 
-                // Wrap each letter in a span and apply a staggered animation delay
-                text.split('').forEach((letter, index) => {
+                const text = heading.textContent.trim();
+                heading.textContent = ''; 
+
+                const letters = text.split('');
+
+                letters.forEach((letter, index) => {
                     const span = document.createElement('span');
-                    span.textContent = letter === ' ' ? '\u00A0' : letter; // Handle spaces
-                    span.style.animationDelay = `${index * 0.07}s`; // Stagger the animation
+                    span.textContent = letter === ' ' ? '\u00A0' : letter;
+                    span.style.animationDelay = `${index * 0.07}s`;
                     heading.appendChild(span);
                 });
             }
 
-            // 2. Handle page sliding
+            // Animate only the first page's heading with JS
+            animateHorizontalHeading('.animated-heading-horizontal');
+            
+            // The vertical heading animation is now handled entirely by CSS
+            
+            // Handle page sliding
             const nextPageBtn = document.getElementById('next-page-btn');
             const pageContainer = document.getElementById('page-container');
 
             if(nextPageBtn && pageContainer) {
                 nextPageBtn.addEventListener('click', () => {
-                    // Slide the container to the left to reveal the second page
                     pageContainer.style.transform = 'translateX(-100vw)';
                 });
             }
