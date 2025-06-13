@@ -6,7 +6,7 @@
     <title>Happy Anniversary!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
     <style>
         /* General Setup */
         :root {
@@ -25,8 +25,8 @@
             font-family: 'Montserrat', sans-serif;
         }
         
-        body {
-            overflow-x: hidden;
+        body.modal-open {
+            overflow: hidden;
         }
 
 
@@ -52,7 +52,6 @@
             position: relative;
         }
         
-        /* Page 1 Specifics */
         #page1 {
              gap: clamp(20px, 5vh, 30px);
         }
@@ -137,10 +136,12 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
         .memory-box:hover {
             transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
 
         .memory-box img {
@@ -149,7 +150,6 @@
             object-fit: cover;
         }
         
-        /* FIX: New styling for vertically stacked heading */
         .animated-heading-vertical {
             display: flex;
             flex-direction: column;
@@ -162,7 +162,6 @@
             line-height: 1.1;
         }
         
-        /* FIX: Animation is now applied to each line (span) */
         .animated-heading-vertical span {
             opacity: 0;
             display: block;
@@ -170,10 +169,9 @@
             animation: dropInLine 0.8s forwards cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
         
-        /* Stagger the animation for each line */
         .animated-heading-vertical span:nth-child(2) {
             animation-delay: 0.2s;
-            font-size: 0.7em; /* Make "of" smaller */
+            font-size: 0.7em;
         }
         .animated-heading-vertical span:nth-child(3) {
             animation-delay: 0.4s;
@@ -186,89 +184,186 @@
             }
         }
         
-        /* Mobile responsive layout for the gallery */
+        /* ---- MODAL / LIGHTBOX STYLES ---- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--background-color);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.4s ease;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 2.5rem;
+            line-height: 1;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .modal-close-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        #modal-gallery-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .modal-gallery-item {
+            text-align: center;
+        }
+
+        .modal-gallery-item img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .modal-gallery-item p {
+            color: var(--text-color);
+            margin-top: 10px;
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+        
+
+        /* --- Responsive Styles --- */
         @media (max-width: 768px) {
             #page2 {
                 overflow-y: auto;
             }
+            
+            /* MOBILE FIX: Use CSS Grid for a better mobile layout */
             #page2 .gallery-container {
-                flex-direction: column;
-                gap: 20px;
-                padding-top: 40px; 
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                width: 100%;
+                align-content: center;
             }
-            /* Make vertical heading the first item in the flex column on mobile */
+            
+            /* MOBILE FIX: The columns become 'invisible' and their children (memory-box) become grid items */
+            .photo-column {
+                display: contents;
+            }
+
+            /* MOBILE FIX: The heading now spans the top of the grid */
             .animated-heading-vertical {
-                 order: -1;
+                grid-column: 1 / -1; /* Span across both columns */
+                margin-bottom: 20px;
+                padding: 0;
+            }
+            
+            #modal-gallery-container {
+                grid-template-columns: 1fr; /* Single column for modal gallery */
             }
         }
-
-
     </style>
 </head>
 <body>
 
     <div id="page-container">
-
         <!-- Page 1: The Welcome Screen -->
         <section id="page1" class="page">
             <h1 class="animated-heading-horizontal">Happy 6 Months, Love of my Life</h1>
-            
-            <svg viewBox="0 0 100 100" class="cake-svg" aria-label="Anniversary Cake">
-                <path d="M 15 90 L 85 90 L 80 95 L 20 95 Z" fill="#E0E0E0"/>
-                <path d="M 48 85 L 52 85 L 52 90 L 48 90 Z" fill="#E0E0E0"/>
-                <path d="M 10 70 C 10 80, 90 80, 90 70 L 90 85 L 10 85 Z" fill="#FFB6C1"/>
-                <ellipse cx="50" cy="70" rx="40" ry="8" fill="#FFDDE1"/>
-                <path d="M 20 50 C 20 60, 80 60, 80 50 L 80 65 L 20 65 Z" fill="#FFB6C1"/>
-                <ellipse cx="50" cy="50" rx="30" ry="7" fill="#FFDDE1"/>
-                <path d="M 30 30 C 30 40, 70 40, 70 30 L 70 45 L 30 45 Z" fill="#FFB6C1"/>
-                <ellipse cx="50" cy="30" rx="20" ry="6" fill="#FFDDE1"/>
-                <rect x="48" y="15" width="4" height="15" fill="#FFFFFF"/>
-                <path d="M 50 10 A 3 3 0 0 1 50 16" fill="orange"/>
-            </svg>
-
-            <button id="next-page-btn" class="nav-button" aria-label="Go to next page">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
-            </button>
+            <svg viewBox="0 0 100 100" class="cake-svg" aria-label="Anniversary Cake"><path d="M 15 90 L 85 90 L 80 95 L 20 95 Z" fill="#E0E0E0"/><path d="M 48 85 L 52 85 L 52 90 L 48 90 Z" fill="#E0E0E0"/><path d="M 10 70 C 10 80, 90 80, 90 70 L 90 85 L 10 85 Z" fill="#FFB6C1"/><ellipse cx="50" cy="70" rx="40" ry="8" fill="#FFDDE1"/><path d="M 20 50 C 20 60, 80 60, 80 50 L 80 65 L 20 65 Z" fill="#FFB6C1"/><ellipse cx="50" cy="50" rx="30" ry="7" fill="#FFDDE1"/><path d="M 30 30 C 30 40, 70 40, 70 30 L 70 45 L 30 45 Z" fill="#FFB6C1"/><ellipse cx="50" cy="30" rx="20" ry="6" fill="#FFDDE1"/><rect x="48" y="15" width="4" height="15" fill="#FFFFFF"/><path d="M 50 10 A 3 3 0 0 1 50 16" fill="orange"/></svg>
+            <button id="next-page-btn" class="nav-button" aria-label="Go to next page"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></button>
         </section>
 
         <!-- Page 2: The Memory Gallery -->
         <section id="page2" class="page">
             <div class="gallery-container">
                 <div class="photo-column">
-                    <div class="memory-box"><img src="https://placehold.co/300x300/e8a0bf/ffffff?text=Our+First+Date" alt="Memory 1"></div>
-                    <div class="memory-box"><img src="https://placehold.co/300x300/a0e8bf/ffffff?text=That+Funny+Moment" alt="Memory 2"></div>
-                    <div class="memory-box"><img src="https://placehold.co/300x300/e8bfb0/ffffff?text=Favorite+Trip" alt="Memory 3"></div>
+                    <div class="memory-box" data-modal-content-id="memory1-content"><img src="https://placehold.co/300x300/e8a0bf/ffffff?text=Our+First+Date" alt="Memory 1"></div>
+                    <div class="memory-box" data-modal-content-id="memory2-content"><img src="https://placehold.co/300x300/a0e8bf/ffffff?text=That+Funny+Moment" alt="Memory 2"></div>
+                    <div class="memory-box" data-modal-content-id="memory3-content"><img src="https://placehold.co/300x300/e8bfb0/ffffff?text=Favorite+Trip" alt="Memory 3"></div>
                 </div>
                 
-                <!-- FIX: HTML structure for new heading -->
                 <div class="animated-heading-vertical">
-                    <span>6 months</span>
-                    <span>of</span>
-                    <span>memories</span>
+                    <span>6 months</span><span>of</span><span>memories</span>
                 </div>
 
                 <div class="photo-column">
-                     <div class="memory-box"><img src="https://placehold.co/300x300/bfa0e8/ffffff?text=Park+Walks" alt="Memory 4"></div>
-                    <div class="memory-box"><img src="https://placehold.co/300x300/e8e0a0/ffffff?text=Movie+Night" alt="Memory 5"></div>
-                    <div class="memory-box"><img src="https://placehold.co/300x300/a0c8e8/ffffff?text=Today+%E2%99%A5" alt="Memory 6"></div>
+                     <div class="memory-box" data-modal-content-id="memory4-content"><img src="https://placehold.co/300x300/bfa0e8/ffffff?text=Park+Walks" alt="Memory 4"></div>
+                    <div class="memory-box" data-modal-content-id="memory5-content"><img src="https://placehold.co/300x300/e8e0a0/ffffff?text=Movie+Night" alt="Memory 5"></div>
+                    <div class="memory-box" data-modal-content-id="memory6-content"><img src="https://placehold.co/300x300/a0c8e8/ffffff?text=Today+%E2%99%A5" alt="Memory 6"></div>
                 </div>
             </div>
         </section>
+    </div>
 
+    <!-- Modal Structure (Initially Hidden) -->
+    <div id="lightbox-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modal-close-btn" class="modal-close-btn">&times;</button>
+            <div id="modal-gallery-container">
+                <!-- Content from hidden divs will be injected here by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden Divs for Modal Content (Customize this section!) -->
+    <div id="hidden-modal-data" style="display: none;">
+        <div id="memory1-content"><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8a0bf/ffffff?text=1a" alt="Detail 1"><p>The coffee shop where it all started.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8a0bf/ffffff?text=1b" alt="Detail 2"><p>I was so nervous I spilled my coffee!</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8a0bf/ffffff?text=1c" alt="Detail 3"><p>You had that amazing smile.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8a0bf/ffffff?text=1d" alt="Detail 4"><p>The start of everything.</p></div></div>
+        <div id="memory2-content"><div class="modal-gallery-item"><img src="https://placehold.co/400x400/a0e8bf/ffffff?text=2a" alt="Detail 1"><p>Remember when we tried to cook together?</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/a0e8bf/ffffff?text=2b" alt="Detail 2"><p>There was flour EVERYWHERE.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/a0e8bf/ffffff?text=2c" alt="Detail 3"><p>But we laughed the entire time.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/a0e8bf/ffffff?text=2d" alt="Detail 4"><p>We ended up ordering pizza.</p></div></div>
+        <div id="memory3-content"><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8bfb0/ffffff?text=3a" alt="Detail 1"><p>Our first road trip.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8bfb0/ffffff?text=3b" alt="Detail 2"><p>Singing along to cheesy songs.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8bfb0/ffffff?text=3c" alt="Detail 3"><p>Getting lost but not even caring.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8bfb0/ffffff?text=3d" alt="Detail 4"><p>Can't wait for our next adventure.</p></div></div>
+        <div id="memory4-content"><div class="modal-gallery-item"><img src="https://placehold.co/400x400/bfa0e8/ffffff?text=4a" alt="Detail 1"><p>That beautiful day at the park.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/bfa0e8/ffffff?text=4b" alt="Detail 2"><p>You looked so happy.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/bfa0e8/ffffff?text=4c" alt="Detail 3"><p>The picnic was perfect.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/bfa0e8/ffffff?text=4d" alt="Detail 4"><p>We should go back soon.</p></div></div>
+        <div id="memory5-content"><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8e0a0/ffffff?text=5a" alt="Detail 1"><p>Cozy movie nights at home.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8e0a0/ffffff?text=5b" alt="Detail 2"><p>You always pick the best snacks.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8e0a0/ffffff?text=5c" alt="Detail 3"><p>Even when you fall asleep halfway through.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/e8e0a0/ffffff?text=5d" alt="Detail 4"><p>My favorite way to spend an evening.</p></div></div>
+        <div id="memory6-content"><div class="modal-gallery-item"><img src="https://placehold.co/400x400/a0c8e8/ffffff?text=6a" alt="Detail 1"><p>Celebrating us, today.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/a0c8e8/ffffff?text=6b" alt="Detail 2"><p>Six amazing months have flown by.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/a0c8e8/ffffff?text=6c" alt="Detail 3"><p>Thank you for everything.</p></div><div class="modal-gallery-item"><img src="https://placehold.co/400x400/a0c8e8/ffffff?text=6d" alt="Detail 4"><p>Here's to many, many more. ❤️</p></div></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
             function animateHorizontalHeading(selector) {
                 const heading = document.querySelector(selector);
                 if (!heading) return;
-
                 const text = heading.textContent.trim();
                 heading.textContent = ''; 
-
                 const letters = text.split('');
-
                 letters.forEach((letter, index) => {
                     const span = document.createElement('span');
                     span.textContent = letter === ' ' ? '\u00A0' : letter;
@@ -276,21 +371,45 @@
                     heading.appendChild(span);
                 });
             }
-
-            // Animate only the first page's heading with JS
             animateHorizontalHeading('.animated-heading-horizontal');
             
-            // The vertical heading animation is now handled entirely by CSS
-            
-            // Handle page sliding
             const nextPageBtn = document.getElementById('next-page-btn');
             const pageContainer = document.getElementById('page-container');
-
             if(nextPageBtn && pageContainer) {
                 nextPageBtn.addEventListener('click', () => {
                     pageContainer.style.transform = 'translateX(-100vw)';
                 });
             }
+            
+            const memoryBoxes = document.querySelectorAll('.memory-box');
+            const modalOverlay = document.getElementById('lightbox-modal');
+            const modalGalleryContainer = document.getElementById('modal-gallery-container');
+            const closeModalBtn = document.getElementById('modal-close-btn');
+
+            memoryBoxes.forEach(box => {
+                box.addEventListener('click', () => {
+                    const contentId = box.getAttribute('data-modal-content-id');
+                    const content = document.getElementById(contentId);
+                    
+                    if(content) {
+                        modalGalleryContainer.innerHTML = content.innerHTML;
+                        document.body.classList.add('modal-open');
+                        modalOverlay.classList.add('active');
+                    }
+                });
+            });
+
+            const closeModal = () => {
+                document.body.classList.remove('modal-open');
+                modalOverlay.classList.remove('active');
+            };
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
         });
     </script>
 
