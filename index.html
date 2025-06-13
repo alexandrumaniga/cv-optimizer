@@ -122,6 +122,14 @@
             height: 100%;
             gap: 20px;
         }
+        
+        /* MOBILE FIX: New wrapper for photo columns */
+        .photo-grid-wrapper {
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             gap: 20px;
+        }
 
         .photo-column {
             display: flex;
@@ -277,29 +285,30 @@
                 overflow-y: auto;
             }
             
-            /* MOBILE FIX: Use CSS Grid for a better mobile layout */
+            /* MOBILE FIX: Simplify the main container to a column layout */
             #page2 .gallery-container {
+                flex-direction: column;
+                justify-content: center;
+                gap: 30px;
+            }
+            
+            /* MOBILE FIX: The new wrapper becomes a simple 2-column grid */
+            .photo-grid-wrapper {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 15px;
-                width: 100%;
-                align-content: center;
-            }
-            
-            /* MOBILE FIX: The columns become 'invisible' and their children (memory-box) become grid items */
-            .photo-column {
-                display: contents;
             }
 
-            /* MOBILE FIX: The heading now spans the top of the grid */
+            .photo-column {
+                display: contents; /* The columns themselves vanish, their items (memory-box) fill the grid */
+            }
+            
             .animated-heading-vertical {
-                grid-column: 1 / -1; /* Span across both columns */
-                margin-bottom: 20px;
-                padding: 0;
+                 padding: 0;
             }
             
             #modal-gallery-container {
-                grid-template-columns: 1fr; /* Single column for modal gallery */
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -316,21 +325,24 @@
 
         <!-- Page 2: The Memory Gallery -->
         <section id="page2" class="page">
+            <!-- MOBILE FIX: HTML reordered for better mobile flow -->
             <div class="gallery-container">
-                <div class="photo-column">
-                    <div class="memory-box" data-modal-content-id="memory1-content"><img src="https://placehold.co/300x300/e8a0bf/ffffff?text=Our+First+Date" alt="Memory 1"></div>
-                    <div class="memory-box" data-modal-content-id="memory2-content"><img src="https://placehold.co/300x300/a0e8bf/ffffff?text=That+Funny+Moment" alt="Memory 2"></div>
-                    <div class="memory-box" data-modal-content-id="memory3-content"><img src="https://placehold.co/300x300/e8bfb0/ffffff?text=Favorite+Trip" alt="Memory 3"></div>
-                </div>
-                
                 <div class="animated-heading-vertical">
                     <span>6 months</span><span>of</span><span>memories</span>
                 </div>
+                
+                <div class="photo-grid-wrapper">
+                    <div class="photo-column">
+                        <div class="memory-box" data-modal-content-id="memory1-content"><img src="https://placehold.co/300x300/e8a0bf/ffffff?text=Our+First+Date" alt="Memory 1"></div>
+                        <div class="memory-box" data-modal-content-id="memory2-content"><img src="https://placehold.co/300x300/a0e8bf/ffffff?text=That+Funny+Moment" alt="Memory 2"></div>
+                        <div class="memory-box" data-modal-content-id="memory3-content"><img src="https://placehold.co/300x300/e8bfb0/ffffff?text=Favorite+Trip" alt="Memory 3"></div>
+                    </div>
 
-                <div class="photo-column">
-                     <div class="memory-box" data-modal-content-id="memory4-content"><img src="https://placehold.co/300x300/bfa0e8/ffffff?text=Park+Walks" alt="Memory 4"></div>
-                    <div class="memory-box" data-modal-content-id="memory5-content"><img src="https://placehold.co/300x300/e8e0a0/ffffff?text=Movie+Night" alt="Memory 5"></div>
-                    <div class="memory-box" data-modal-content-id="memory6-content"><img src="https://placehold.co/300x300/a0c8e8/ffffff?text=Today+%E2%99%A5" alt="Memory 6"></div>
+                    <div class="photo-column">
+                        <div class="memory-box" data-modal-content-id="memory4-content"><img src="https://placehold.co/300x300/bfa0e8/ffffff?text=Park+Walks" alt="Memory 4"></div>
+                        <div class="memory-box" data-modal-content-id="memory5-content"><img src="https://placehold.co/300x300/e8e0a0/ffffff?text=Movie+Night" alt="Memory 5"></div>
+                        <div class="memory-box" data-modal-content-id="memory6-content"><img src="https://placehold.co/300x300/a0c8e8/ffffff?text=Today+%E2%99%A5" alt="Memory 6"></div>
+                    </div>
                 </div>
             </div>
         </section>
